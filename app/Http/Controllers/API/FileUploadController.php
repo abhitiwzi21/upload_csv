@@ -3,6 +3,7 @@ use App\Http\Controllers\Controller;
 use App\Models\File; use Validator; 
 use App\Models\Data;
 use Illuminate\Http\Request; 
+use Mail;
 class FileUploadController extends Controller { 
     public function upload(Request $request) 
     { 
@@ -95,7 +96,15 @@ class FileUploadController extends Controller {
                 "gender"=>$importData[4],
                 "ip_address"=>$importData[5]);
             Data::insert($insertData);
+           
+          }
+          if(!empty($testResult)){
 
+              Mail::send(['text'=>'mail'],  $testResult, function($message) {
+                $message->to('rahul@protracked.in', 'akshara@protracked.in')->subject
+                   ('CSV Upload Report');
+                $message->from('abhishektw21@gmail.com','Abhishek Tiwari');
+             });
           }
           return response()->json([
             "success" => true,
